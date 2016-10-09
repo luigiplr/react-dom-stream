@@ -1,1 +1,1 @@
-module.exports = require("./build/lru-render-cache");
+export default require('./build/lru-render-cache')

@@ -1,17 +1,8 @@
 // when in production mode, use the minified version; it's much, much faster.
-var ReactDOMStream;
-if (process.env.NODE_ENV === "production") {
-	ReactDOMStream = require("./dist/react.min");
-	module.exports = {
-		renderToString: ReactDOMStream.renderToString,
-		renderToStaticMarkup: ReactDOMStream.renderToStaticMarkup
-	};
-
+if (process.env.NODE_ENV === 'production') {
+  const { renderToString, renderToStaticMarkup } = require('./dist/react.min')
+  module.exports = { renderToString, renderToStaticMarkup }
 } else {
-	ReactDOMStream = require("./lib/ReactDOMServer");
-
-	module.exports = {
-		renderToString: ReactDOMStream.renderToStringStream,
-		renderToStaticMarkup: ReactDOMStream.renderToStaticMarkupStream
-	};
+  const { renderToStringStream: renderToString, renderToStaticMarkupStream: renderToStaticMarkup } = require('./lib/ReactDOMServer')
+  module.exports = { renderToString, renderToStaticMarkup }
 }

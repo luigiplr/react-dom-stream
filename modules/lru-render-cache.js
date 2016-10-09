@@ -1,60 +1,62 @@
-import LRU from "lru-cache"
+import LRU from 'lru-cache'
 
 class LRURenderCache {
-	constructor(options = {}) {
-		if (Number.isInteger(options)) {
-			options = {
-				max:options
-			};
-		}
+  constructor(options = {}) {
+    if (Number.isInteger(options)) {
+      options = { max: options }
+    }
 
-		let originalDispose = options.dispose;
+    let { dispose: originalDispose } = options
 
-		this.lruCache = LRU({
-			max: options.max || 128 * 1024 * 1024,
+    this.lruCache = LRU({
+      max: options.max || 128 * 1024 * 1024,
 
-			length: (value, key) => {
-				return value.value.length + (value.key.length * 2);
-			},
+      length: (value, key) => {
+        return value.value.length + (value.key.length * 2);
+      },
 
-			dispose: (key, value) => {
-				const componentMap = this._getComponentMap(value.component);
-				componentMap.delete(value.key);
-				if (componentMap.size === 0) {
-					this.map.delete(value.component);
-				}
-				originalDispose(key, value);
-			},
-		});
-		
-		this.map = new Map();
-	}
+      dispose: (key, value) => {
+        const componentMap = this._getComponentMap(value.component)
+        componentMap.delete(value.key)
+        if (componentMap.size === 0) {
+          this.map.delete(value.component)
+        }
+        originalDispose(key, value)
+      }
+    })
 
-	get(component, key) {
-		const lruCacheKey = this._getComponentMap(component).get(key);
-		const storedValue = this.lruCache.get(lruCacheKey);
-		if (typeof storedValue === "object") {
-			return storedValue.value;
-		}
-		return undefined;
-	}
+    this.map = new Map()
+  }
 
-	set(component, key, value) {
-		const lruCacheKey = {};
-		this._getComponentMap(component).set(key, lruCacheKey);
-		this.lruCache.set(lruCacheKey, {component, key, value});
-	}
+  get(component, key) {
+    const lruCacheKey = this._getComponentMap(component).get(key)
+    const storedValue = this.lruCache.get(lruCacheKey)
+    if (typeof storedValue === 'object') {
+      return storedValue.value
+    }
+    return undefined
+  }
 
-	_getComponentMap(component) {
-		var componentMap = this.map.get(component);
+  set(component, key, value) {
+    const lruCacheKey = {};
+    this._getComponentMap(component).set(key, lruCacheKey);
+    this.lruCache.set(lruCacheKey, {
+      component,
+      key,
+      value
+    })
+  }
 
-		if (!componentMap) {
-		  componentMap = new Map();
-		  this.map.set(component, componentMap);
-		}
+  _getComponentMap(component) {
+    var componentMap = this.map.get(component)
 
-		return componentMap;
-	}
+    if (!componentMap) {
+      componentMap = new Map()
+      this.map.set(component, componentMap)
+    }
+
+    return componentMap
+  }
 }
 
-export default options => new LRURenderCache(options);
+export default options => new LRURenderCache(options)

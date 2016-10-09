@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "(cd ../react && grunt test)",
-    "build": "(cd ../react && grunt build) && ./node_modules/babel-cli/bin/babel.js modules --out-dir build",
+    "build": "(cd ../react && grunt build) && (cd ../react-dom-stream && babel ./modules --out-dir build)",
     "postbuild": "rm -rf lib && cp -R ../react/build/packages/react/lib lib && rm -rf dist && cp -R ../react/build/packages/react/dist dist",
     "prepublish": "npm run build"
   },
@@ -20,9 +20,9 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "envify": "^3.0.0",
-    "fbjs": "^0.3.1",
-    "lru-cache": "^4.0.0"
+    "envify": "^3.4.1",
+    "fbjs": "^0.8.5",
+    "lru-cache": "^4.0.1"
   },
   "browserify": {
     "transform": [
@@ -36,8 +36,8 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.4.0",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13"
+    "babel-cli": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0"
   }
 }
